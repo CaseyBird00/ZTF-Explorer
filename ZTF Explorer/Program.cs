@@ -1,5 +1,6 @@
 ﻿using System;
 
+
 namespace ZTF_Explorer
 {
     public class Program
@@ -7,6 +8,8 @@ namespace ZTF_Explorer
         public static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
+            ParquetReader reader = new ParquetReader();
+            reader.parquetreader();
         }
     }
 }
