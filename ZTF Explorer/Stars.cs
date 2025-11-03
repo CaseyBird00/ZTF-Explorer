@@ -8,20 +8,30 @@ namespace ZTF_Explorer
 {
     public class Star
     {
-        public string ObjID;
-        public int FieldID;
-        public float ra;
-        public float decl;
-        public Boolean Checked;
-        public Boolean AAVSO;
+        public double ObjID { get; set; }
+        public int FieldID { get; set; }
+        public float Ra { get; set; }
+        public float Decl { get; set; }
+        public Boolean Processed { get; set; }
+        public Boolean AAVSO { get; set; }
+
+        public Star(double objID, int fieldID, float ra, float decl, bool processed, bool aAVSO)
+        {
+            ObjID = objID;
+            FieldID = fieldID;
+            this.Ra = ra;
+            this.Decl = decl;
+            Processed = processed;
+            AAVSO = aAVSO;
+        }
     }
 
     public class LightCurve
     {
         public string ObjID;
-        public float hmjd;
-        public float mag;
-        public float magerr;
-        public float filterid;
+        public float Hmjd;
+        public float Hag;
+        public float Magerr;
+        public float Filterid;
     }
 }
