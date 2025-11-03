@@ -28,10 +28,19 @@ namespace ZTF_Explorer
 
     public class LightCurve
     {
-        public string ObjID;
+        public double ObjID;
+        public int Filterid;
         public float Hmjd;
-        public float Hag;
+        public float Mag;
         public float Magerr;
-        public float Filterid;
+
+        public LightCurve(double objID, float filterid, float hmjd, float mag, float magerr)
+        {
+            ObjID = objID;
+            Hmjd = hmjd;
+            Mag = mag;
+            Magerr = magerr;
+            Filterid = filterid;
+        }
     }
 }

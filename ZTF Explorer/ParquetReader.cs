@@ -42,12 +42,12 @@ namespace ZTF_Explorer
                     Console.WriteLine(ObjDec[i]);
                     */
                     Star star = new(Convert.ToDouble(Objid[i]), Convert.ToInt32(Fieldid[i]), objRA, objDec, false, false);
-                    LightCurveRead(i,rowGroupReader);
+                    LightCurveRead(Convert.ToDouble(Objid[i]), i,rowGroupReader);
                 }
             }
         }
 
-        public void LightCurveRead(int Row,  RowGroupReader rowGroupReader)
+        public void LightCurveRead(double Objid, int Row,  RowGroupReader rowGroupReader)
         {
             var groupNumRows = checked((int)rowGroupReader.MetaData.NumRows);
 
@@ -60,6 +60,8 @@ namespace ZTF_Explorer
             var Hmjd = Column7.ReadAll(groupNumRows);
             var Mag = Column8.ReadAll(groupNumRows);
             var Magerr = Column9.ReadAll(groupNumRows);
+
+            LightCurve lightCurve = new(Objid, Convert.ToUInt32(Filterid), Hmjd, Mag, Magerr);
 
             Console.WriteLine(Hmjd[Row][0]);
         }
