@@ -43,8 +43,13 @@ namespace ZTF_Explorer
                     Console.WriteLine(ObjDec[i]);
                     */
                     Star star = new(Convert.ToDouble(Objid[i]), Convert.ToInt32(Fieldid[i]), objRA, objDec, false, false);
+
+                    Queue.StarsQ.Enqueue(star);
                     LightCurveRead(Convert.ToDouble(Objid[i]), i,rowGroupReader);
+                    Console.WriteLine("Stars queue " + Queue.StarsQ.Count);
+
                 }
+                
             }
         }
 
@@ -62,10 +67,19 @@ namespace ZTF_Explorer
             var Hmjd = Column7.ReadAll(groupNumRows);
             var Mag = Column8.ReadAll(groupNumRows);
             var Magerr = Column9.ReadAll(groupNumRows);
-            
 
-            LightCurve lightCurve = new(Objid, Convert.ToInt32(Filterid[Row]), Convert.ToDouble(Hmjd[Row][0]), Convert.ToDouble(Mag[Row][0]), Convert.ToDouble(Magerr[Row][0]));
+            for (int i = 0; i < Mag[Row].Length; i++)
+            {
+                LightCurve lightCurve = new(Objid, Convert.ToInt32(Filterid[Row]), Convert.ToDouble(Hmjd[Row][i]), Convert.ToDouble(Mag[Row][i]), Convert.ToDouble(Magerr[Row][i]));
+                Queue.LightCurveQ.Add(lightCurve);
 
+
+            }
+
+
+
+
+            Console.WriteLine("Light Curve queue " + Queue.LightCurveQ.Count);
             //Console.WriteLine(lightCurve.ObjID + " " + lightCurve.Filterid + " " + lightCurve.Hmjd + " " + lightCurve.Mag + "  "+ lightCurve.Magerr);
         }
     }
