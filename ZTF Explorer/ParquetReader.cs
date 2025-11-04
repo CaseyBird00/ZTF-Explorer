@@ -1,10 +1,11 @@
-﻿using System;
+﻿using ParquetSharp;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-using ParquetSharp;
 
 namespace ZTF_Explorer
 {
@@ -51,19 +52,21 @@ namespace ZTF_Explorer
         {
             var groupNumRows = checked((int)rowGroupReader.MetaData.NumRows);
 
-            var Column1 = rowGroupReader.Column(1).LogicalReader<long?>();
+            var Column1 = rowGroupReader.Column(1).LogicalReader<sbyte?>();
             var Column7 = rowGroupReader.Column(7).LogicalReader<double?[]>();
             var Column8 = rowGroupReader.Column(8).LogicalReader<float?[]>();
             var Column9 = rowGroupReader.Column(9).LogicalReader<float?[]>();
+
 
             var Filterid = Column1.ReadAll(groupNumRows);
             var Hmjd = Column7.ReadAll(groupNumRows);
             var Mag = Column8.ReadAll(groupNumRows);
             var Magerr = Column9.ReadAll(groupNumRows);
+            
 
-            LightCurve lightCurve = new(Objid, Convert.ToUInt32(Filterid), Hmjd, Mag, Magerr);
+            LightCurve lightCurve = new(Objid, Convert.ToInt32(Filterid[Row]), Convert.ToDouble(Hmjd[Row][0]), Convert.ToDouble(Mag[Row][0]), Convert.ToDouble(Magerr[Row][0]));
 
-            Console.WriteLine(Hmjd[Row][0]);
+            //Console.WriteLine(lightCurve.ObjID + " " + lightCurve.Filterid + " " + lightCurve.Hmjd + " " + lightCurve.Mag + "  "+ lightCurve.Magerr);
         }
     }
 }

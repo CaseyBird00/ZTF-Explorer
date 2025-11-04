@@ -30,17 +30,18 @@ namespace ZTF_Explorer
     {
         public double ObjID;
         public int Filterid;
-        public float Hmjd;
-        public float Mag;
-        public float Magerr;
+        public double Hmjd;
+        public double Mag;
+        public double Magerr;
 
-        public LightCurve(double objID, float filterid, float hmjd, float mag, float magerr)
+        public LightCurve(double objID, int filterid, double hmjd, double mag, double magerr)
         {
             ObjID = objID;
+            Filterid = filterid;
             Hmjd = hmjd;
             Mag = mag;
             Magerr = magerr;
-            Filterid = filterid;
+            
         }
     }
 }
