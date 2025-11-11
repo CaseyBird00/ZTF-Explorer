@@ -11,5 +11,7 @@ namespace ZTF_Explorer
     {
         public static List<LightCurve> LightCurveQ = new List<LightCurve>();
         public static ConcurrentQueue<Star> StarsQ = new ConcurrentQueue<Star>();
+
+
     }
 }   

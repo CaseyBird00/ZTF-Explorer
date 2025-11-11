@@ -10,7 +10,9 @@ namespace ZTF_Explorer
     {
         public void CalculateLightcurve(LightCurve lightCurve)
         {
-            
+
+            if (lightCurve.Mag > 20.0)
+                Console.WriteLine("Light curve is " + " " + lightCurve.Mag);
 
         }
 
