@@ -13,9 +13,18 @@ namespace ZTF_Explorer
             Console.WriteLine("Hello, World!");
             ParquetReader reader = new ParquetReader();
             reader.parquetreader();
+            Start();
 
             //TODO create thread for data processing
         }
+        public static void Start()
+        {
 
+            foreach (var star in Queue.StarsQ)
+            {
+                StarProcessing.StartProcess(star);
+            }
+        }
+    
     }
 }

@@ -31,7 +31,7 @@ namespace ZTF_Explorer
                 var ObjRA = Column4.ReadAll(groupNumRows);
                 var ObjDec = Column5.ReadAll(groupNumRows);
 
-                for (int i = 0; i < groupNumRows; ++i)
+                for (int i = 0; i < 10 /*groupNumRows*/; ++i)
                 {
                     var objRA = ObjRA[i] ?? 0f;
                     var objDec = ObjDec[i] ?? 0f;
@@ -49,7 +49,7 @@ namespace ZTF_Explorer
                     Console.WriteLine("Stars queue " + Queue.StarsQ.Count);
 
                 }
-                
+
             }
         }
 
