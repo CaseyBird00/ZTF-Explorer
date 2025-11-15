@@ -31,8 +31,9 @@ namespace ZTF_Explorer
                 var ObjRA = Column4.ReadAll(groupNumRows);
                 var ObjDec = Column5.ReadAll(groupNumRows);
 
-                for (int i = 0; i < 10 /*groupNumRows*/; ++i)
+                for (int i = 0; i != 5 /*groupNumRows*/; ++i)
                 {
+                    Console.WriteLine(i);
                     var objRA = ObjRA[i] ?? 0f;
                     var objDec = ObjDec[i] ?? 0f;
 

@@ -19,18 +19,49 @@ namespace ZTF_Explorer
         }
         public static void StartProcess(Star star)
         {
-            SortLightgCurves(star.ObjID);
+            SortLightCurves(star.ObjID);
+            CompareMagnitudes();
         }
 
-        public static void SortLightgCurves(double objid)
+        public static void CompareMagnitudes()
         {
-            for(int i = 0; i < Queue.LightCurveQ.Count; i++)
+            if (lightCurveQ != null)
+            {
+                for (int i = 1; i < lightCurveQ.Count; i++)
+                {
+                    var prev = lightCurveQ[i - 1];
+                    var curr = lightCurveQ[i];
+
+                    var diff = Math.Abs(curr.Mag - prev.Mag);
+
+                    if (diff > curr.Magerr)
+                    {
+                        Console.WriteLine($"Significant change detected for ObjID {curr.ObjID} at Hmjd {curr.Hmjd}: Mag changed from {prev.Mag} to {curr.Mag} (Diff: {diff})");
+                        //Console.ReadLine();
+                    }
+                }
+            }
+            
+        }
+
+        public static void SortLightCurves(double objid)
+        {
+            lightCurveQ.Clear();
+            for (int i = 0; i < Queue.LightCurveQ.Count; i++)
             {
                 if (Queue.LightCurveQ[i].ObjID == objid)
                 {
+
                     lightCurveQ.Add(Queue.LightCurveQ[i]);
-                    Console.WriteLine(Queue.LightCurveQ[i]);
+
+                    Console.WriteLine(Queue.LightCurveQ[i].Hmjd);
                 }
+            }
+
+            lightCurveQ = lightCurveQ.OrderBy(lc => lc.Hmjd).ToList();
+            foreach(var i in lightCurveQ)
+            {
+                Console.WriteLine($"Sorted: {i.Hmjd}");
             }
         }
 
