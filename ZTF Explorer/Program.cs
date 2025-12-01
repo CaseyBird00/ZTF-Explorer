@@ -9,11 +9,22 @@ namespace ZTF_Explorer
         {
 
             //TODO Create thread for parquet reader
-
-            Console.WriteLine("Hello, World!");
-            ParquetReader reader = new ParquetReader();
-            reader.parquetreader();
-            Start();
+            
+            Console.WriteLine("type \"Read\" to start reading files or \"Process\" to start processing stars");
+            string input = Console.ReadLine();
+            if(input == "Read")
+            {
+                ParquetReader reader = new ParquetReader();
+                reader.parquetreader();
+            }
+            else if(input == "Process")
+            {
+                Start();
+            }
+            else
+            {
+                Console.WriteLine("Invalid input");
+            }
 
             //TODO create thread for data processing
         }
