@@ -21,10 +21,10 @@ namespace ZTF_Explorer
                 using var rowGroupReader = file.RowGroup(rowGroup);
                 var groupNumRows = checked((int)rowGroupReader.MetaData.NumRows);
 
-                var Column0 = rowGroupReader.Column(0).LogicalReader<long?>();
-                var Column2 = rowGroupReader.Column(2).LogicalReader<short?>();
-                var Column4 = rowGroupReader.Column(4).LogicalReader<float?>();
-                var Column5 = rowGroupReader.Column(5).LogicalReader<float?>();
+                var Column0 = rowGroupReader.Column(0).LogicalReader<long?>(); //read ObJID
+                var Column2 = rowGroupReader.Column(2).LogicalReader<short?>(); //read FieldID
+                var Column4 = rowGroupReader.Column(4).LogicalReader<float?>(); //read RA
+                var Column5 = rowGroupReader.Column(5).LogicalReader<float?>();// read DEC
 
                 var Objid = Column0.ReadAll(groupNumRows);
                 var Fieldid = Column2.ReadAll(groupNumRows);

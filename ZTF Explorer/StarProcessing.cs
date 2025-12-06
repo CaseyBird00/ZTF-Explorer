@@ -36,7 +36,7 @@ namespace ZTF_Explorer
 
                     if (diff > curr.Magerr)
                     {
-                        Console.WriteLine($"Significant change detected for ObjID {curr.ObjID} at Hmjd {curr.Hmjd}: Mag changed from {prev.Mag} to {curr.Mag} (Diff: {diff})");
+                        Console.WriteLine("Significant change detected for ObjID {curr.ObjID} at Hmjd {curr.Hmjd}: Mag changed from {prev.Mag} to {curr.Mag} (Diff: {diff})");
                         //Console.ReadLine();
                     }
                 }
