@@ -35,7 +35,7 @@ namespace ZTF_Explorer
                 var ObjDec = Column5.ReadAll(groupNumRows);
 
                 //Loop that reads each row and creates a star object
-                for (int i = 0; i != 100 /*groupNumRows*/; ++i)
+                for (int i = 0; i != 200 /*groupNumRows*/; ++i)
                 {
                     Console.WriteLine(i);
                     var objRA = ObjRA[i] ?? 0f;
@@ -68,21 +68,27 @@ namespace ZTF_Explorer
             var Column8 = rowGroupReader.Column(8).LogicalReader<float?[]>(); //Mag
             var Column9 = rowGroupReader.Column(9).LogicalReader<float?[]>();//Magerr
 
-            //Assign variables
-            var Filterid = Column1.ReadAll(groupNumRows);
-            var Hmjd = Column7.ReadAll(groupNumRows);
-            var Mag = Column8.ReadAll(groupNumRows);
-            var Magerr = Column9.ReadAll(groupNumRows);
+            
 
-            //Loop that reads each row and creates a light curve object
-            for (int i = 0; i < Mag[Row].Length; i++)
-            {
-                LightCurve lightCurve = new(Objid, Convert.ToInt32(Filterid[Row]), Convert.ToDouble(Hmjd[Row][i]), Convert.ToDouble(Mag[Row][i]), Convert.ToDouble(Magerr[Row][i]));
-                Queue.LightCurveQ.Add(lightCurve);
+                //Assign variables
+                var Filterid = Column1.ReadAll(groupNumRows);
+                var Hmjd = Column7.ReadAll(groupNumRows);
+                var Mag = Column8.ReadAll(groupNumRows);
+                var Magerr = Column9.ReadAll(groupNumRows);
+
+                //Loop that reads each row and creates a light curve object
+                for (int i = 0; i < Mag[Row].Length; i++)
+                {
+                //Only use lightcurves with filterid 1 (g-band)
+                if (Convert.ToInt32(Filterid[Row]) == 1)
+                 {
+               // Console.WriteLine(Filterid[Row]);
+                        LightCurve lightCurve = new(Objid, Convert.ToInt32(Filterid[Row]), Convert.ToDouble(Hmjd[Row][i]), Convert.ToDouble(Mag[Row][i]), Convert.ToDouble(Magerr[Row][i]));
+                    Queue.LightCurveQ.Add(lightCurve);
 
 
+                }
             }
-
 
 
 
