@@ -27,7 +27,7 @@ namespace ZTF_Explorer
             UserID = file[1];
             Password = file[2];
             Database = file[3];
-            Console.WriteLine(IP + UserID + Password + Database);
+            //Console.WriteLine(IP + UserID + Password + Database);
 
 
         }
@@ -36,13 +36,16 @@ namespace ZTF_Explorer
             var builder = new MySqlConnectionStringBuilder
             {
                 Server = IP,
+                Port = 3306,
                 UserID = UserID,
                 Password = Password,
                 Database = Database,
                 ConnectionTimeout = 5 // seconds
             };
 
-            return new MySqlConnection(builder.ConnectionString);
+            var conn = new MySqlConnection(builder.ConnectionString);
+            conn.Open(); // must open it before using
+            return conn;
         }
     }
 }

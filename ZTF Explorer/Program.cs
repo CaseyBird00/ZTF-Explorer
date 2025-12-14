@@ -10,7 +10,7 @@ namespace ZTF_Explorer
 
             //TODO Create thread for parquet reader
 
-            Console.WriteLine("Intializing SQL..." );
+            Console.WriteLine("Intializing SQL...");
 
             try
             {
@@ -18,23 +18,28 @@ namespace ZTF_Explorer
                 using var connection = SQL.GetConnection();
 
                 // Open the connection
-                connection.Open();
+                //connection.Open();
                 Console.WriteLine("SQL Initialized.");
             }
-            catch(Exception ex) { 
-                Console.WriteLine("Failed to connect: " + ex.Message );
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to connect: " + ex.Message);
             }
 
             Console.WriteLine("type \"Read\" to start reading files or \"Process\" to start processing stars");
             string input = Console.ReadLine();
-            if(input == "Read" || input == "read")
+            if (input == "Read" || input == "read")
             {
                 ParquetReader reader = new ParquetReader();
                 reader.parquetreader();
             }
-            else if(input == "Process" || input == "process")
+            else if (input == "Process" || input == "process")
             {
                 Start();
+            }
+            else if (input == "Compare" || input == "compare")
+            {
+                Compare();
             }
             else
             {
@@ -50,7 +55,17 @@ namespace ZTF_Explorer
             {
                 StarProcessing.StartProcess(star);
             }
+            Main(Array.Empty<string>());
+
         }
-    
+
+        public static void Compare()
+        {
+            foreach (var star in Queue.VariableStarsQ)
+            {
+                StarVariationProcessor.MatchStars(star);
+            }
+            Main(Array.Empty<string>());
+        }
     }
 }

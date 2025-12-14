@@ -17,14 +17,14 @@ namespace ZTF_Explorer
         public static void StartProcess(Star star)
         {
             SortLightCurves(star.ObjID);
-            CompareMagnitudes(star.ObjID);
+            CompareMagnitudes(star);
         }
 
-        public static void CompareMagnitudes(double objID)
+        public static void CompareMagnitudes(Star star)
         {
             if (lightCurveQ != null)
             {
-                var starLCs = lightCurveQ.Where(lc => lc.ObjID == objID).ToList();
+                var starLCs = lightCurveQ.Where(lc => lc.ObjID == star.ObjID).ToList();
 
                // for (int i = 1; i < lightCurveQ.Count; i++)
                 //{
@@ -35,7 +35,9 @@ namespace ZTF_Explorer
 
                     if(magPeak - magTrough >= 1)
                     {
-                    Console.WriteLine($"Variation detected for star {objID}");
+                    Console.WriteLine($"Variation detected for star {star.ObjID}");
+
+                    Queue.VariableStarsQ.Add(star);
                     return;
                     }
                // }
