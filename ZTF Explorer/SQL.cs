@@ -10,12 +10,16 @@ namespace ZTF_Explorer
 {
     public class SQL
     {
-        string IP { get; set; }
-        string UserID { get; set; }
-        string Password { get; set; }
+        private static string? IP;
+        private static string? UserID;
+        private static string? Password;
+        private static string? Database;
 
-        string Database { get; set; }
-        void LoadSQL()
+        static SQL()
+        {
+            LoadSQL();
+        }
+        public static void LoadSQL()
         {
             string FilePath = "C:\\Users\\Casey\\Documents\\GitHub\\ZTF-Explorer\\ZTF Explorer\\SQL.dat";
 
@@ -27,7 +31,7 @@ namespace ZTF_Explorer
             Database = file[3];
 
         }
-        public void Connection()
+        public static SqlConnection GetConnection()
         {
             var builder = new SqlConnectionStringBuilder
             {
@@ -36,6 +40,8 @@ namespace ZTF_Explorer
                 Password = Password,       // SQL password
                 InitialCatalog = Database  // Database name
             };
+
+            return new SqlConnection(builder.ConnectionString);
         }
 
     }

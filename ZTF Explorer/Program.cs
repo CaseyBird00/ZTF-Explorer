@@ -9,7 +9,18 @@ namespace ZTF_Explorer
         {
 
             //TODO Create thread for parquet reader
-            
+
+            Console.WriteLine("Intializing SQL..." );
+
+            try
+            {
+                SQL.LoadSQL();
+                Console.WriteLine("SQL Initialized.");
+            }
+            catch(Exception ex) { 
+                Console.WriteLine("Failed to connect: " + ex.Message );
+            }
+
             Console.WriteLine("type \"Read\" to start reading files or \"Process\" to start processing stars");
             string input = Console.ReadLine();
             if(input == "Read")
