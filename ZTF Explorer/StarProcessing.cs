@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,31 +14,29 @@ namespace ZTF_Explorer
 
         static List<LightCurve> lightCurveQ = new List<LightCurve>();
         
-        public void Start()
-        {
-
-        }
         public static void StartProcess(Star star)
         {
             SortLightCurves(star.ObjID);
-            CompareMagnitudes();
+            CompareMagnitudes(star.ObjID);
         }
 
-        public static void CompareMagnitudes()
+        public static void CompareMagnitudes(double objID)
         {
             if (lightCurveQ != null)
             {
+                var starLCs = lightCurveQ.Where(lc => lc.ObjID == objID).ToList();
+
                 for (int i = 1; i < lightCurveQ.Count; i++)
                 {
-                    var prev = lightCurveQ[i - 1];
-                    var curr = lightCurveQ[i];
+                    //Console.WriteLine($"Processing ObjID {lightCurveQ[i].ObjID} at Hmjd {lightCurveQ[i].Hmjd}");
 
-                    var diff = Math.Abs(curr.Mag - prev.Mag);
+                    double magPeak = starLCs.Max(lc => lc.Mag);
+                    double magTrough = starLCs.Min(lc => lc.Mag);
 
-                    if (diff > curr.Magerr)
+                    if(magPeak - magTrough >= 1)
                     {
-                        Console.WriteLine("Significant change detected for ObjID {curr.ObjID} at Hmjd {curr.Hmjd}: Mag changed from {prev.Mag} to {curr.Mag} (Diff: {diff})");
-                        //Console.ReadLine();
+                        Console.WriteLine($"Variation detected for star {lightCurveQ[i].ObjID}");
+                        return;
                     }
                 }
             }
@@ -54,14 +53,14 @@ namespace ZTF_Explorer
 
                     lightCurveQ.Add(Queue.LightCurveQ[i]);
 
-                    Console.WriteLine(Queue.LightCurveQ[i].Hmjd);
+                    //Console.WriteLine(Queue.LightCurveQ[i].Hmjd);
                 }
             }
 
             lightCurveQ = lightCurveQ.OrderBy(lc => lc.Hmjd).ToList();
             foreach(var i in lightCurveQ)
             {
-                Console.WriteLine($"Sorted: {i.Hmjd}");
+                //Console.WriteLine($"Sorted: {i.Hmjd}");
             }
         }
 
