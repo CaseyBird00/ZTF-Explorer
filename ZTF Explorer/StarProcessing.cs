@@ -26,8 +26,8 @@ namespace ZTF_Explorer
             {
                 var starLCs = lightCurveQ.Where(lc => lc.ObjID == objID).ToList();
 
-                for (int i = 1; i < lightCurveQ.Count; i++)
-                {
+               // for (int i = 1; i < lightCurveQ.Count; i++)
+                //{
                     //Console.WriteLine($"Processing ObjID {lightCurveQ[i].ObjID} at Hmjd {lightCurveQ[i].Hmjd}");
 
                     double magPeak = starLCs.Max(lc => lc.Mag);
@@ -35,10 +35,10 @@ namespace ZTF_Explorer
 
                     if(magPeak - magTrough >= 1)
                     {
-                        Console.WriteLine($"Variation detected for star {lightCurveQ[i].ObjID}");
-                        return;
+                    Console.WriteLine($"Variation detected for star {objID}");
+                    return;
                     }
-                }
+               // }
             }
             
         }
