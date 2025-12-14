@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Azure.Core.GeoJson;
+using Microsoft.Data.SqlClient;
+using MySqlConnector;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Azure.Core.GeoJson;
-using Microsoft.Data.SqlClient;
 
 namespace ZTF_Explorer
 {
@@ -15,10 +16,7 @@ namespace ZTF_Explorer
         private static string? Password;
         private static string? Database;
 
-        static SQL()
-        {
-            LoadSQL();
-        }
+
         public static void LoadSQL()
         {
             string FilePath = "C:\\Users\\Casey\\Documents\\GitHub\\ZTF-Explorer\\ZTF Explorer\\SQL.dat";
@@ -29,20 +27,22 @@ namespace ZTF_Explorer
             UserID = file[1];
             Password = file[2];
             Database = file[3];
+            Console.WriteLine(IP + UserID + Password + Database);
+
 
         }
-        public static SqlConnection GetConnection()
+        public static MySqlConnection GetConnection()
         {
-            var builder = new SqlConnectionStringBuilder
+            var builder = new MySqlConnectionStringBuilder
             {
-                DataSource = IP,           // IP or server name
-                UserID = UserID,           // SQL username
-                Password = Password,       // SQL password
-                InitialCatalog = Database  // Database name
+                Server = IP,
+                UserID = UserID,
+                Password = Password,
+                Database = Database,
+                ConnectionTimeout = 5 // seconds
             };
 
-            return new SqlConnection(builder.ConnectionString);
+            return new MySqlConnection(builder.ConnectionString);
         }
-
     }
 }

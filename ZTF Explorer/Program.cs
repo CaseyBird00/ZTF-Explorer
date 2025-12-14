@@ -15,6 +15,10 @@ namespace ZTF_Explorer
             try
             {
                 SQL.LoadSQL();
+                using var connection = SQL.GetConnection();
+
+                // Open the connection
+                connection.Open();
                 Console.WriteLine("SQL Initialized.");
             }
             catch(Exception ex) { 
@@ -23,12 +27,12 @@ namespace ZTF_Explorer
 
             Console.WriteLine("type \"Read\" to start reading files or \"Process\" to start processing stars");
             string input = Console.ReadLine();
-            if(input == "Read")
+            if(input == "Read" || input == "read")
             {
                 ParquetReader reader = new ParquetReader();
                 reader.parquetreader();
             }
-            else if(input == "Process")
+            else if(input == "Process" || input == "process")
             {
                 Start();
             }
