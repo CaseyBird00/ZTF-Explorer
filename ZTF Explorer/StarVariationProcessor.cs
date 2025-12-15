@@ -23,6 +23,7 @@ namespace ZTF_Explorer
 
             var conn = SQL.GetConnection();
             using var cmd = conn.CreateCommand();
+            cmd.CommandTimeout = 30 * 60;
             cmd.CommandText = @"
     SELECT *
     FROM Stars
