@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
@@ -51,7 +52,8 @@ namespace ZTF_Explorer
                     Console.WriteLine("OBJ RA: " + objRA);
                     Queue.StarsQ.Enqueue(star);
                     LightCurveRead(Convert.ToDouble(Objid[i]), i,rowGroupReader);
-                    Console.WriteLine("Stars queue " + Queue.StarsQ.Count);
+                    //Console.WriteLine("Stars queue " + Queue.StarsQ.Count);
+                    Console.WriteLine($"Star ID: {Objid[i]}, RA: {ObjRA[i]}, DECL: {ObjDec[i]}");
 
                 }
                 Program.Main(Array.Empty<string>());

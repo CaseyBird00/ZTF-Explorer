@@ -26,14 +26,19 @@ namespace ZTF_Explorer
             {
                 var starLCs = lightCurveQ.Where(lc => lc.ObjID == star.ObjID).ToList();
 
-               // for (int i = 1; i < lightCurveQ.Count; i++)
+                // for (int i = 1; i < lightCurveQ.Count; i++)
                 //{
-                    //Console.WriteLine($"Processing ObjID {lightCurveQ[i].ObjID} at Hmjd {lightCurveQ[i].Hmjd}");
+                //Console.WriteLine($"Processing ObjID {lightCurveQ[i].ObjID} at Hmjd {lightCurveQ[i].Hmjd}");
 
-                    double magPeak = starLCs.Max(lc => lc.Mag);
-                    double magTrough = starLCs.Min(lc => lc.Mag);
+                double threshold = 0.5;
+                int MinOccurances = 5;
 
-                    if(magPeak - magTrough >= 1)
+                var sortedMags = starLCs.Select(lc => lc.Mag).OrderBy(m => m).ToList();
+                double medianMag = sortedMags[sortedMags.Count / 2];
+
+                int deviationCount = starLCs.Count(lc => Math.Abs(lc.Mag - medianMag) >= threshold);
+
+                if (deviationCount >= MinOccurances)
                     {
                     Console.WriteLine($"Variation detected for star {star.ObjID}");
 
