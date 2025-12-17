@@ -36,8 +36,9 @@ namespace ZTF_Explorer
                 var ObjDec = Column5.ReadAll(groupNumRows);
 
                 //Loop that reads each row and creates a star object
-                for (int i = 0; i != 300 /*groupNumRows*/; ++i)
+                for (int i = 0; i != groupNumRows; ++i)
                 {
+                    Console.WriteLine(groupNumRows);
                     Console.WriteLine(i);
                     var objRA = ObjRA[i] ?? 0f;
                     var objDec = ObjDec[i] ?? 0f;

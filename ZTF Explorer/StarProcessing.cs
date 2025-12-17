@@ -30,8 +30,8 @@ namespace ZTF_Explorer
                 //{
                 //Console.WriteLine($"Processing ObjID {lightCurveQ[i].ObjID} at Hmjd {lightCurveQ[i].Hmjd}");
 
-                double threshold = 0.5;
-                int MinOccurances = 5;
+                double threshold = .7;
+                int MinOccurances = 20;
 
                 var sortedMags = starLCs.Select(lc => lc.Mag).OrderBy(m => m).ToList();
                 double medianMag = sortedMags[sortedMags.Count / 2];
