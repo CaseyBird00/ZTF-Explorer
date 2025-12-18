@@ -10,11 +10,15 @@ namespace ZTF_Explorer
 
             //TODO Create thread for parquet reader
 
-            Console.WriteLine("Intializing SQL...");
+            
+            Console.WriteLine("Enter SQL DB");
 
-            try
-            {
-                SQL.LoadSQL();
+            string input = Console.ReadLine();
+
+            Console.WriteLine("Intializing SQL...");
+            try { 
+            
+                SQL.LoadSQL(Convert.ToInt32(input));
                 using var connection = SQL.GetConnection();
 
                 // Open the connection
@@ -27,7 +31,7 @@ namespace ZTF_Explorer
             }
 
             Console.WriteLine("type \"Read\" to start reading files or \"Process\" to start processing stars");
-            string input = Console.ReadLine();
+            input = Console.ReadLine();
             if (input == "Read" || input == "read")
             {
                 ParquetReader reader = new ParquetReader();
@@ -41,7 +45,12 @@ namespace ZTF_Explorer
             {
                 Compare();
             }
+            else if (input == "Log" || input == "log")
+            {
+                Export();
+            }
             else
+
             {
                 Console.WriteLine("Invalid input");
             }
@@ -64,6 +73,15 @@ namespace ZTF_Explorer
             foreach (var star in Queue.VariableStarsQ)
             {
                 StarVariationProcessor.MatchStars(star);
+            }
+            Main(Array.Empty<string>());
+        }
+
+        public static void Export()
+        {
+            foreach(var star in Queue.Candidates)
+            {
+                Console.WriteLine("Candidate Star: " + star.ObjID + "RA " + star.Ra + "DECL " + star.Decl);
             }
             Main(Array.Empty<string>());
         }

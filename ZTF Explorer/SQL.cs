@@ -15,13 +15,23 @@ namespace ZTF_Explorer
         private static string? UserID;
         private static string? Password;
         private static string? Database;
+        private static string? FilePath;
 
-
-        public static void LoadSQL()
+        public static void LoadSQL(int db)
         {
-            string FilePath = "C:\\Users\\Casey\\Documents\\GitHub\\ZTF-Explorer\\ZTF Explorer\\SQL.dat";
 
-            var file = File.ReadAllLines(FilePath);
+            if (db == 0)
+            {
+
+                FilePath = "C:\\Users\\Casey\\Documents\\GitHub\\ZTF-Explorer\\ZTF Explorer\\SQL.dat";
+            }
+            else if (db == 1) {
+                FilePath = "C:\\Users\\Casey\\Documents\\GitHub\\ZTF-Explorer\\ZTF Explorer\\SQL2.dat";
+
+
+            }
+
+                var file = File.ReadAllLines(FilePath);
 
             IP = file[0];
             UserID = file[1];

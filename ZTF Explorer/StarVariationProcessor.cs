@@ -46,12 +46,15 @@ namespace ZTF_Explorer
                     while (reader.Read())
                     {
                         Console.WriteLine($"Found Star: {reader["vsx_id"]}, RA: {reader["RA"]}, Dec: {reader["DECLI"]}");
+                        Queue.Candidates.Remove(star);
+
                     }
                 }
                 else
                 {
+                        Queue.Candidates.Add(star);
+
                     Console.WriteLine("No matches found.");
-                    AddCandidateToDatabase(star);
 
                 }
             }
@@ -63,27 +66,33 @@ namespace ZTF_Explorer
             
             
         }
-        public static void AddCandidateToDatabase(Star star)
+        public static void AddCandidateToDatabase()
         {
-            var conn = SQL.GetConnection();
-            using var cmd = conn.CreateCommand();
-            cmd.CommandText = @"
+            int i = 0;
+            while (i < Queue.Candidates.Count)
+            {
+                var star = Queue.Candidates[i];
+                SQL.LoadSQL(1);
+                var conn = SQL.GetConnection();
+                using var cmd = conn.CreateCommand();
+                cmd.CommandText = @"
 INSERT INTO Candidates (ZTF_ID, RA, DECLI, Status)
 VALUES (@ztfId, @ra, @decl, @status)";
-            cmd.Parameters.AddWithValue("@ztfId", star.ObjID);
-            cmd.Parameters.AddWithValue("@ra", star.Ra);
-            cmd.Parameters.AddWithValue("@decl", star.Decl);
-            cmd.Parameters.AddWithValue("@status", "New");
-            try
-            {
-                cmd.ExecuteNonQuery();
-                Console.WriteLine($"Candidate star {star.ObjID} added to database.");
+                cmd.Parameters.AddWithValue("@ztfId", star.ObjID);
+                cmd.Parameters.AddWithValue("@ra", star.Ra);
+                cmd.Parameters.AddWithValue("@decl", star.Decl);
+                cmd.Parameters.AddWithValue("@status", "New");
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    Console.WriteLine($"Candidate star {star.ObjID} added to database.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error adding candidate star {star.ObjID} to database: {ex.Message}");
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error adding candidate star {star.ObjID} to database: {ex.Message}");
-            }
-        } 
+        }
 
 
 
