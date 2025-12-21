@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.Design;
 
 
 namespace ZTF_Explorer
@@ -79,11 +80,18 @@ namespace ZTF_Explorer
 
         public static void Export()
         {
-            foreach(var star in Queue.Candidates)
+            try
             {
-                Console.WriteLine("Candidate Star: " + star.ObjID + "RA " + star.Ra + "DECL " + star.Decl);
+                foreach (var star in Queue.VariableStarsQ)
+                {
+                    Console.WriteLine("Candidate Star: " + star.ObjID + "RA " + star.Ra + "DECL " + star.Decl);
+                }
+            }catch(Exception e)
+            {
+                Console.WriteLine("Failed " + Queue.Candidates);
             }
-            Main(Array.Empty<string>());
+            
+                Main(Array.Empty<string>());
         }
     }
 }

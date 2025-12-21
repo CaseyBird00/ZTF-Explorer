@@ -14,7 +14,7 @@ namespace ZTF_Explorer
     {
         public void parquetreader()
         {
-            using var file = new ParquetFileReader("C:\\Users\\Casey\\Documents\\GitHub\\ZTF-Explorer\\ZTF Explorer\\Stars.parquet");
+            using var file = new ParquetFileReader(@"C:\Users\Casey\Documents\GitHub\ZTF-Explorer\ZTF Explorer\Stars.parquet");
             using var firstRowGroupReader = file.RowGroup(0);
 
             for (int rowGroup = 0; rowGroup < file.FileMetaData.NumRowGroups; ++rowGroup)
@@ -52,7 +52,7 @@ namespace ZTF_Explorer
                     Star star = new(Convert.ToDouble(Objid[i]), Convert.ToInt32(Fieldid[i]), objRA, objDec, false, false);
                     Console.WriteLine("OBJ RA: " + objRA);
                     Queue.StarsQ.Enqueue(star);
-                    LightCurveRead(Convert.ToDouble(Objid[i]), i,rowGroupReader);
+                    LightCurveRead(Convert.ToDouble(Objid[i]), i, rowGroupReader);
                     //Console.WriteLine("Stars queue " + Queue.StarsQ.Count);
                     Console.WriteLine($"Star ID: {Objid[i]}, RA: {ObjRA[i]}, DECL: {ObjDec[i]}");
 
@@ -62,43 +62,70 @@ namespace ZTF_Explorer
             }
         }
 
-        public void LightCurveRead(double Objid, int Row,  RowGroupReader rowGroupReader)
+        public void LightCurveRead(double objid, int row, RowGroupReader rowGroupReader)
         {
-            var groupNumRows = checked((int)rowGroupReader.MetaData.NumRows);
+            Console.WriteLine($"ENTER LightCurveRead row={row} objid={objid}");
 
-            var Column1 = rowGroupReader.Column(1).LogicalReader<sbyte?>(); //FilterID
-            var Column7 = rowGroupReader.Column(7).LogicalReader<double?[]>(); //HMJD
-            var Column8 = rowGroupReader.Column(8).LogicalReader<float?[]>(); //Mag
-            var Column9 = rowGroupReader.Column(9).LogicalReader<float?[]>();//Magerr
+            try
+            {
+                int n = checked((int)rowGroupReader.MetaData.NumRows);
 
-            
+                using var filterReader = rowGroupReader.Column(1).LogicalReader<sbyte?>();     // filterid
+                using var hmjdReader = rowGroupReader.Column(7).LogicalReader<double?[]>();  // hmjd list
+                using var magReader = rowGroupReader.Column(8).LogicalReader<float?[]>();   // mag list  (nullable elems!)
+                using var merrReader = rowGroupReader.Column(9).LogicalReader<float?[]>();   // magerr list (nullable elems!)
 
-                //Assign variables
-                var Filterid = Column1.ReadAll(groupNumRows);
-                var Hmjd = Column7.ReadAll(groupNumRows);
-                var Mag = Column8.ReadAll(groupNumRows);
-                var Magerr = Column9.ReadAll(groupNumRows);
+                var filter = filterReader.ReadAll(n);
+                var hmjd = hmjdReader.ReadAll(n);
+                var mag = magReader.ReadAll(n);
+                var merr = merrReader.ReadAll(n);
 
-                //Loop that reads each row and creates a light curve object
-                for (int i = 0; i < Mag[Row].Length; i++)
+                Console.WriteLine($"AFTER ReadAll row={row} filter={filter[row]} " +
+                                  $"hmjdLen={(hmjd[row]?.Length ?? -1)} magLen={(mag[row]?.Length ?? -1)} merrLen={(merr[row]?.Length ?? -1)}");
+
+                if ((filter[row] ?? (sbyte)-1) != 2)
                 {
-                //Only use lightcurves with filterid 1 (g-band)
-                if (Convert.ToInt32(Filterid[Row]) == 1)
-                 {
-               // Console.WriteLine(Filterid[Row]);
-                        LightCurve lightCurve = new(Objid, Convert.ToInt32(Filterid[Row]), Convert.ToDouble(Hmjd[Row][i]), Convert.ToDouble(Mag[Row][i]), Convert.ToDouble(Magerr[Row][i]));
-                    Queue.LightCurveQ.Add(lightCurve);
-
-
+                    Console.WriteLine($"SKIP: filter != 1 (row={row}, filter={filter[row]})");
+                    return;
                 }
+
+                var h = hmjd[row];
+                var m = mag[row];
+                var e = merr[row];
+
+                if (h == null || m == null || e == null)
+                {
+                    Console.WriteLine("SKIP: one of arrays is null");
+                    return;
+                }
+
+                int len = Math.Min(h.Length, Math.Min(m.Length, e.Length));
+                int added = 0;
+
+                for (int i = 0; i < len; i++)
+                {
+                    if (!h[i].HasValue || !m[i].HasValue || !e[i].HasValue) continue;
+
+                    Queue.LightCurveQ.Add(new LightCurve(
+                        objid,
+                        1,
+                        h[i]!.Value,
+                        m[i]!.Value,
+                        e[i]!.Value
+                    ));
+
+                    added++;
+                }
+
+                Console.WriteLine($"DONE row={row} added={added} total={Queue.LightCurveQ.Count}");
             }
-
-
-
-            Console.WriteLine("Light Curve queue " + Queue.LightCurveQ.Count);
-            //Console.WriteLine(lightCurve.ObjID + " " + lightCurve.Filterid + " " + lightCurve.Hmjd + " " + lightCurve.Mag + "  "+ lightCurve.Magerr);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR in LightCurveRead row={row} objid={objid}: {ex}");
+            }
         }
+
+
     }
 }
-
 

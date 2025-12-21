@@ -52,8 +52,6 @@ namespace ZTF_Explorer
                 }
                 else
                 {
-                        Queue.Candidates.Add(star);
-
                     Console.WriteLine("No matches found.");
 
                 }
