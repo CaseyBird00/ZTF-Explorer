@@ -36,7 +36,7 @@ namespace ZTF_Explorer
             if (input == "Read" || input == "read")
             {
                 ParquetReader reader = new ParquetReader();
-                reader.Parquetreader();
+                reader.parquetreader();
             }
             else if (input == "Process" || input == "process")
             {
