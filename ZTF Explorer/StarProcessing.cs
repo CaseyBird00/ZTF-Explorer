@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,41 +14,75 @@ namespace ZTF_Explorer
 
 
         static List<LightCurve> lightCurveQ = new List<LightCurve>();
-        
+
+        public static int score = 0;
         public static void StartProcess(Star star)
         {
             SortLightCurves(star.ObjID);
-            CompareMagnitudes(star);
+            CountPoints(star);
+            AmplitudeCalc(star);
+            flagVariable(star);
+
         }
 
-        public static void CompareMagnitudes(Star star)
+        public static void CountPoints(Star star)
         {
             if (lightCurveQ != null)
             {
-                var starLCs = lightCurveQ.Where(lc => lc.ObjID == star.ObjID).ToList();
-
-                // for (int i = 1; i < lightCurveQ.Count; i++)
-                //{
-                //Console.WriteLine($"Processing ObjID {lightCurveQ[i].ObjID} at Hmjd {lightCurveQ[i].Hmjd}");
-
-                double threshold = .7;
-                int MinOccurances = 20;
-
-                var sortedMags = starLCs.Select(lc => lc.Mag).OrderBy(m => m).ToList();
-                double medianMag = sortedMags[sortedMags.Count / 2];
-
-                int deviationCount = starLCs.Count(lc => Math.Abs(lc.Mag - medianMag) >= threshold);
-
-                if (deviationCount >= MinOccurances)
-                    {
-                    Console.WriteLine($"Variation detected for star {star.ObjID}");
-
-                    Queue.VariableStarsQ.Add(star);
+                if (lightCurveQ.Count >= 20)
+                {
                     return;
-                    }
-               // }
+                }
+                else if (lightCurveQ.Count > 20 || lightCurveQ.Count < 30)
+                {
+                    score += 10;
+                }
+                else if (lightCurveQ.Count > 30 || lightCurveQ.Count < 40)
+                {
+                    score += 15;
+                }
+                else if(lightCurveQ.Count > 40)
+                {
+                    score += 20;
+                }
             }
             
+        }
+
+        public static void AmplitudeCalc(Star star) {
+
+            double Amplitude;
+            double maxMag = lightCurveQ.Max(lc => lc.Mag);
+            double minMag = lightCurveQ.Min(lc => lc.Mag);
+            Amplitude = maxMag - minMag;
+
+            if(Amplitude < 0.25)
+            {
+                return;
+            }else if(Amplitude > 0.25 || Amplitude < 0.49)
+            {
+                score += 10;
+            }
+            else if(Amplitude > 0.5 || Amplitude < 0.79)
+            {
+                score += 18;
+            }
+            else if(Amplitude > 0.79)
+            {
+                score += 25;
+            }
+
+        }
+
+        public static void flagVariable(Star star)
+        {
+            if(score >= 25)
+            {
+                Queue.VariableStarsQ.Add(star);
+                Console.WriteLine($"Star {star.ObjID} flagged as variable with score {score}");
+            }
+            score = 0;
+            lightCurveQ.Clear();
         }
 
         public static void SortLightCurves(double objid)
