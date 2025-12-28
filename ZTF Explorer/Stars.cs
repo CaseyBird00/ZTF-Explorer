@@ -9,16 +9,14 @@ namespace ZTF_Explorer
     public class Star
     {
         public double ObjID { get; set; }
-        public int FieldID { get; set; }
         public float Ra { get; set; }
         public float Decl { get; set; }
         public Boolean Processed { get; set; }
         public Boolean AAVSO { get; set; }
 
-        public Star(double objID, int fieldID, float ra, float decl, bool processed, bool aAVSO)
+        public Star(double objID, float ra, float decl, bool processed, bool aAVSO)
         {
             ObjID = objID;
-            FieldID = fieldID;
             this.Ra = ra;
             this.Decl = decl;
             Processed = processed;
